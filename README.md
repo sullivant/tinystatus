@@ -37,10 +37,12 @@ Command can be:
 * `http` - Check http status
 * `ping` - Check ping status; its line on the status page will include the average time for the pings
 * `port` - Check open port status
+* 'group' - Ability to separate sections in checks.csv with group titles
 
 There are also `http4`, `http6`, `ping4`, `ping6`, `port4`, `port6` for IPv4 or IPv6 only check.  
 Note: `port4` and `port6` require OpenBSD `nc` binary.
 
 ### Revision History
+* v0.3.0 - Adds ability to separate sections with a group command.
 * v0.2.0 - Adds ability to include details with a variable `INCLUDE_DETAILS`; `ping` command will include trip time in ms in details portion.
 * v0.1.0 - Assumed original version
