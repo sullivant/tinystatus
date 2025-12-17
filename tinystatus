@@ -11,7 +11,7 @@ TIMEOUT=10
 USER_AGENT="User-Agent: Mozilla/5.0 (X11; Linux x86_64; Debian) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
 TMP_DIR="$(mktemp -d)"
 INCLUDE_DETAILS=1
-OUTPUT_JSON=1
+OUTPUT_JSON=0
 
 command_exists(){
     if ! command -v "${1}" >/dev/null 2>&1; then
@@ -108,6 +108,12 @@ if [ "${OUTPUT_JSON}" -eq 1 ]; then
     for file in "${TMP_DIR}/"*.ok; do
         [ -e "${file}" ] || continue
         service_name="$(cat "${file}")"
+
+        # If this is a group separator, skip it in json output.
+        if [[ "$service_name" == ":"* ]]; then
+            continue
+        fi
+
         echo "  {\"name\":\"${service_name}\", \"status\":\"operational\"},"
     done
     echo "]}"
@@ -148,6 +154,16 @@ EOF
     done
     for file in "${TMP_DIR}/"*.ok; do
         [ -e "${file}" ] || continue
+        name=$(head -1 ${file})
+
+        # First, if the line happens to be a group separator, it will begin with :
+        # So we can print it to the html file with the correct class and then continue on.
+        if [[ "$name" == ":"* ]]; then
+            stripped_name="${name#?}"
+            echo "<li class='panel'><span class='separator'>${stripped_name}</span></li>"
+            continue
+        fi
+
         echo "<li>$(cat "${file}") <span class='status success'>Operational</span></li>"
     done
     cat << EOF
