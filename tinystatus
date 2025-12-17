@@ -157,7 +157,7 @@ EOF
 fi
 
 # Cleanup and exit
-# rm -r "${TMP_DIR}" 2>/dev/null
+rm -r "${TMP_DIR}" 2>/dev/null
 if "${OUTAGE_RC}"; then
     exit "${OUTAGES_COUNT}"
 fi
